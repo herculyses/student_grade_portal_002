@@ -113,7 +113,7 @@ def login():
             session['role'] = user.role
             flash(f'Logged in successfully as {user.username}', 'success')
             add_log(user.username, 'Logged in')
-            time.sleep(5)  # 🕒 Let the DB and session settle
+            time.sleep(1)  # 🕒 Let the DB and session settle
             if user.role == 'Admin':
                 return redirect(url_for('dashboard_admin'))
             elif user.role == 'Instructor':
@@ -131,7 +131,7 @@ def logout():
     session.clear()
     if user:
         add_log(user, 'Logged out')
-        time.sleep(5)  # 🕒 Prevent SQLite lock or empty data
+        time.sleep(1)  # 🕒 Prevent SQLite lock or empty data
     return redirect(url_for('login'))
 
 # Change Password
@@ -169,7 +169,7 @@ def change_password():
             user.username,
             f"Changed their password (Role: {user.role})"
         )
-        time.sleep(4)
+        time.sleep(1)
 
         # Force logout for security
         session.clear()
