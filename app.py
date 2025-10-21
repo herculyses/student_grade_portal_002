@@ -178,7 +178,7 @@ def change_password():
 
     return render_template('change_password.html')
 
-
+# --- Dashboards ---
 # Admin Dashboard
 @app.route('/dashboard/admin')
 @login_required(role='Admin')
@@ -334,6 +334,29 @@ def bulk_delete_instructors():
     else:
         flash('No instructors selected for deletion.', 'warning')
     return redirect(url_for('view_instructors'))
+
+@app.route('/dashboard/admin/student/<int:student_id>/view')
+@login_required(role='Admin')
+def admin_view_student(student_id):
+    student = Student.query.get_or_404(student_id)
+    student_records = Student.query.filter_by(student_id=student.student_id).all()
+    return render_template('dashboard_student.html', students=student_records, student_name=student.name)
+
+# --- Admin: Preview Student Dashboard ---
+@app.route('/dashboard/admin/student/<int:student_id>/preview')
+@login_required(role='Admin')
+def admin_student_preview(student_id):
+    # Fetch the student by internal ID
+    student = Student.query.get_or_404(student_id)
+    
+    # Get all records for that student
+    student_records = Student.query.filter_by(student_id=student.student_id).all()
+    
+    return render_template(
+        'admin_student_preview.html',
+        students=student_records,
+        student_name=student.name
+    )
 
 # View/Add/Edit/Delete Students
 @app.route('/dashboard/admin/students')
